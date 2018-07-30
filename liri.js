@@ -45,13 +45,14 @@ function getSong(trackName) {
 spotify.search({ type: 'track', query: trackName, limit: 1, popularity: 80 }, function(err, data) {
     if (!err) {
         var spot = data.tracks.items[0]; 
+
         console.log("\n=============\n");
         console.log("Artist: " + spot.album.artists[0].name); 
         console.log("Release Date: " + spot.album.release_date);
         console.log("Album Name: " + spot.name); 
         console.log("External URL: " + spot.album.artists[0].href);
         console.log("\n=============\n");
-        var spotifyInfo = " || " + spot.album.artists[0].name + " " +  spot.album.release_date + " " + spot.name + " " + spot.album.artists[0].href + " ";
+        var spotifyInfo = " || " + spot.album.artists[0].name + " " +  spot.album.release_date + " " + spot.name + " " + spot.album.artists[0].href + " || ";
         writeToLog(spotifyInfo); 
     } else { 
             console.log("error occured: " + err); 
@@ -73,6 +74,8 @@ request(movieName, function(err, movies, body) {
         console.log("\nPlot: " + omdbInput.Plot + "\n"); 
         console.log("Starring: " + omdbInput.Actors);
         console.log("\n==========\n")
+        var movieInfo = (" || " + omdbInput.Title + " " + omdbInput.Released + " " + omdbInput.imdbRating + " " + omdbInput.Ratings[1].Value + " " + omdbInput.Country + " " + omdbInput.Language + " " + omdbInput.Plot + " " + omdbInput.Actors)
+        writeToLog(movieInfo); 
 
     } else console.log(err); 
     })
@@ -80,11 +83,11 @@ request(movieName, function(err, movies, body) {
 
 if (input[2] === validateTwitter) { 
     getTweets(); 
-} else if (input[2] === validateSpotify) {
+} else if (input[2] === validateSpotify && string !== "") {
     trackName = string; 
     console.log("track name: " + trackName); 
     getSong(trackName); 
-} else if (input[2] === validateOmdb) { 
+} else if (input[2] === validateOmdb && string !== "") { 
     movieName = "http://www.omdbapi.com/?t=" + string + "&y=&plot=short&apikey=trilogy";
     getMovie(movieName); 
 } else if (input[2] === validateRandom) {
@@ -95,22 +98,23 @@ if (input[2] === validateTwitter) {
             getSong(movieName); 
         } 
     })
-} else if (input[2] === validateOmdb && string === "") { 
+} else if (input[2] === validateOmdb) { 
     movieName = "http://www.omdbapi.com/?t=mr%20nobody&y=&plot=short&apikey=trilogy";
     getMovie(movieName); 
 
+} else if (input[2] === validateSpotify) {
+    trackName = "Ignition Remix"
+    getSong(trackName); 
 }
 function writeToLog(writeInput) {
     fs.appendFile("log.txt", "\n" + writeInput, function(err) {
         if (err) {
             console.log("writeToLog Error: " + err)
-        } else { 
-            console.log("log.txt was updated")
-        }
+        } 
     }); 
 }
+
 //things that still need to be completed: 
-//1. I need to do the bonus - log to log.txt
 //2. i also need to make sure my twitter function is complete. 
 //3. find a way to get the validateOmdb if there is no input. 
 //4. if time, confirm the song is the one you were looking for. 
