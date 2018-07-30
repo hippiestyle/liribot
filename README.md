@@ -1,2 +1,2 @@
-# liribot
-Newest one!
+# liri-bot
+Liri Bot 
